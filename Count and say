@@ -1,0 +1,22 @@
+class Solution {
+    public String countAndSay(int n) {
+        if (n == 1) return "1";   // base case       
+        String prev = countAndSay(n - 1);  // recursive call
+        return encode(prev);               // run-length encode
+    }
+    // RLE encoding of a string (count and say)
+    private String encode(String s) {
+        StringBuilder sb = new StringBuilder();
+        int count = 1;
+        for (int i = 1; i <= s.length(); i++) {
+            if (i < s.length() && s.charAt(i) == s.charAt(i - 1)) {
+                count++;  // same char → increase count
+            } else {
+                sb.append(count);          // write count
+                sb.append(s.charAt(i - 1)); // write char
+                count = 1;                  // reset count
+            }
+        }
+        return sb.toString();
+    }
+}
