@@ -1,0 +1,21 @@
+class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        // Create sets for rows, columns, and boxes
+        HashSet<String> seen = new HashSet<>();
+        for (int r = 0; r < 9; r++) {
+            for (int c = 0; c < 9; c++) {
+                char curr = board[r][c];
+                if (curr == '.') continue; // ignore empty cells
+                // Build keys
+                String rowKey = curr + " in row " + r;
+                String colKey = curr + " in col " + c;
+                String boxKey = curr + " in box " + (r / 3) + "-" + (c / 3);
+                // Check duplicates
+                if (!seen.add(rowKey) || !seen.add(colKey) || !seen.add(boxKey)) {
+                    return false; // duplicate found
+                }
+            }
+        }
+        return true; // valid Sudoku
+    }
+}
