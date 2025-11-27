@@ -1,0 +1,37 @@
+class Solution {
+    public int numberOfPaths(int[][] grid, int k) {
+        int m = grid.length;
+        int n = grid[0].length;
+        final int MOD = 1_000_000_007;
+        // dpPrev[j][r] = ways to reach column j in previous row with remainder r
+        long[][] dpPrev = new long[n][k];
+        for (int i = 0; i < m; i++) {
+            // newDp for current row
+            long[][] newDp = new long[n][k];
+            for (int j = 0; j < n; j++) {
+                int v = grid[i][j] % k;
+                if (i == 0 && j == 0) {
+                    // start cell
+                    newDp[0][v] = 1;
+                    continue;
+                }
+                for (int r = 0; r < k; r++) {
+                    long waysFromTop = 0;
+                    long waysFromLeft = 0;
+                    if (i > 0) {
+                        waysFromTop = dpPrev[j][r];
+                    }
+                    if (j > 0) {
+                        waysFromLeft = newDp[j - 1][r];
+                    }
+                    long totalWays = (waysFromTop + waysFromLeft) % MOD;
+                    if (totalWays == 0) continue;
+                    int newR = (r + v) % k;
+                    newDp[j][newR] = (newDp[j][newR] + totalWays) % MOD;
+                }
+            }
+            dpPrev = newDp; // move to next row
+        }
+        return (int) dpPrev[n - 1][0];
+    }
+}
