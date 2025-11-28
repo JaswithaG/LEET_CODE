@@ -1,0 +1,33 @@
+import java.util.*;
+class Solution {
+    int count = 0;
+    int k;
+    List<List<Integer>> graph;
+    int[] values;
+    public int maxKDivisibleComponents(int n, int[][] edges, int[] values, int k) {
+        this.k = k;
+        this.values = values;
+        graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) graph.add(new ArrayList<>());
+        for (int[] e : edges) {
+            graph.get(e[0]).add(e[1]);
+            graph.get(e[1]).add(e[0]);
+        }
+        dfs(0, -1);
+        return count;
+    }
+    private long dfs(int node, int parent) {
+        long sum = values[node];
+        for (int nei : graph.get(node)) {
+            if (nei != parent) {
+                sum += dfs(nei, node);
+            }
+        }
+        // If this subtree can be split here
+        if (sum % k == 0) {
+            count++;
+            return 0;  // "cut" here
+        }
+        return sum; // pass sum to parent
+    }
+}
